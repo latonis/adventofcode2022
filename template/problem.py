@@ -8,7 +8,7 @@ def getInput(file):
 
 def solveFirst(data):
     for line in data:
-        print(data)
+        print(line)
 
 if __name__ == "__main__":
     data = getInput("./test-input")
