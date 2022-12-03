@@ -10,6 +10,11 @@ def solveFirst(data):
     for line in data:
         print(line)
 
+def solveSecond(data):
+    for line in data:
+        print(line)
+
 if __name__ == "__main__":
     data = getInput("./test-input")
     solveFirst(data)
+    solveSecond(data)
