@@ -19,7 +19,15 @@ local function getInput(fileName)
     end
 
     local lines = fileIn:lines()
-    return lines
+    local count = 1
+    local returnLines = {}
+    
+    for line in lines do
+        returnLines[count] = line
+        count = count + 1
+    end
+
+    return returnLines
 end
 
 local function solveFirst(input)
@@ -27,7 +35,7 @@ local function solveFirst(input)
     local wins = {["A"] = "Y", ["B"] = "Z", ["C"] = "X"}
     local losses = {["A"] = "Z", ["B"] = "X", ["C"] = "Y"}
     local score = 0
-    for line in input do
+    for idx, line in pairs(input) do
         local splitRes = split(line)
         local given = splitRes[1]
         local answer = splitRes[2]
@@ -50,7 +58,7 @@ local function solveSecond(input)
     local losses = {["A"] = "Z", ["B"] = "X", ["C"] = "Y"}
     local score = 0
     
-    for line in input do
+    for idx, line in pairs(input) do
         local splitRes = split(line)
         local given = splitRes[1]
         local answer = splitRes[2]
@@ -58,9 +66,9 @@ local function solveSecond(input)
         if (answer == "X") then
             score = score + string.byte(losses[given]) % string.byte("X") + 1
         elseif (answer == "Y") then
-            score = score + 3 + score + string.byte(given) % string.byte("X") + 1
+            score = score + 3  + string.byte(given) % string.byte("A") + 1
         else
-            score = score + 6 + score + string.byte(wins[given]) % string.byte("X") + 1
+            score = score + 6  + string.byte(wins[given]) % string.byte("X") + 1
         end
     end
     print(score)
@@ -68,5 +76,5 @@ local function solveSecond(input)
 end
 
 local input = getInput("./input")
-
-solveProblem(input)
+solveFirst(input)
+solveSecond(input)
