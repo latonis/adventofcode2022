@@ -22,11 +22,48 @@ local function getInput(fileName)
     return lines
 end
 
-local function solveProblem(input)
+local function solveFirst(input)
     -- do things here to solve problem
+    local wins = {["A"] = "Y", ["B"] = "Z", ["C"] = "X"}
+    local losses = {["A"] = "Z", ["B"] = "X", ["C"] = "Y"}
+    local score = 0
     for line in input do
-        print(line)
+        local splitRes = split(line)
+        local given = splitRes[1]
+        local answer = splitRes[2]
+        score = score + (string.byte(answer) % string.byte("X") + 1)
+        if (wins[given] == answer) then
+            score = score + 6
+        elseif (losses[given] == answer) then
+            score = score + 0
+        else
+            score = score + 3
+        end
     end
+    print(score)
+    -- do things above here to solve the problem
+end
+
+local function solveSecond(input)
+    -- do things here to solve problem
+    local wins = {["A"] = "Y", ["B"] = "Z", ["C"] = "X"}
+    local losses = {["A"] = "Z", ["B"] = "X", ["C"] = "Y"}
+    local score = 0
+    
+    for line in input do
+        local splitRes = split(line)
+        local given = splitRes[1]
+        local answer = splitRes[2]
+
+        if (answer == "X") then
+            score = score + string.byte(losses[given]) % string.byte("X") + 1
+        elseif (answer == "Y") then
+            score = score + 3 + score + string.byte(given) % string.byte("X") + 1
+        else
+            score = score + 6 + score + string.byte(wins[given]) % string.byte("X") + 1
+        end
+    end
+    print(score)
     -- do things above here to solve the problem
 end
 

@@ -7,50 +7,35 @@ def getInput(file):
     return data
 
 def solveFirst(data):
-    # rock is a and x, 
-    # paper is b and Y
-    # scissors is c and z
-    
-    # a beats y
-    wins = {("A", "Y"), ("B", "Z"), ("C", "X")}
-    losses = {("A", "Z"), ("B", "X"), ("C", "Y")}
-    
-    scores = {"X": 1, "Y": 2, "Z": 3}
-    score = 0
+    bothComp = []
     for line in data:
-        given, answer = line.split()
-        score += scores[answer]
-        if (given, answer) in wins:
-            score += 6
-        elif (given, answer) in losses:
-            score += 0
+        firstHalf = set(line[:len(line)//2])
+        secondHalf = set(line[(len(line)//2):])
+        bothComp.append(*firstHalf.intersection(secondHalf))
+    score = 0
+    for char in bothComp:
+        if (char.islower()):
+            score += ord(char)% 96
         else:
-            score += 3
-    print(score)
+            score += ord(char)% 64 + 26
+    print(f"Priority for first part: {score}")
 
 def solveSecond(data):
-    wins = {"A": "Y", "B": "Z", "C": "X"}
-    losses = {"A": "Z", "B": "X", "C": "Y"}
-    
-    scores = {"X": 1, "Y": 2, "Z": 3, "A": 1, "B": 2, "C": 3}
-    
+    bothComp = []
+    count = 0
+    for i in range(0, len(data), 3):
+        firstInt = set(data[i]).intersection(set(data[i+1]))
+        bothComp.append(*firstInt.intersection((data[i+2])))
+
     score = 0
-
-    for line in data:
-        given, answer = line.split()
-        if (answer == 'X'):
-            score += 0
-            score += scores[losses[given]]
-        elif (answer == 'Y'): 
-            score += 3
-            score += scores[given]
+    for char in bothComp:
+        if (char.islower()):
+            score += ord(char)% 96
         else:
-            score += 6
-            score += scores[wins[given]]
-    print(score)
-
+            score += ord(char)% 64 + 26
+    print(f"Priority for second part: {score}")
 
 if __name__ == "__main__":
-    data = getInput("input")
+    data = getInput("./input")
     solveFirst(data)
     solveSecond(data)
