@@ -18,16 +18,29 @@ local function split (inputstr, sep)
         return
     end
 
+    -- this has state, so can't use twice for each problem 
     local lines = fileIn:lines()
     local count = 1
     local returnLines = {}
-    
+
+    -- i want a stateless iterator, theres probably a better way to do this but it works
     for line in lines do
         returnLines[count] = line
         count = count + 1
     end
 
     return returnLines
+end
+
+-- i have to write a set function??? lul
+function Set(str)
+    local s = {}
+    for char in str:gmatch"." do s[char] = true end
+    return s
+end
+
+function IsUpper(char)
+    return string.match(char, '%u')
 end
 
 local function solveFirst(input)
