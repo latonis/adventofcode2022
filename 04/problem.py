@@ -9,20 +9,16 @@ def getInput(file):
 def solveFirst(data):
     bothComp = []
     for line in data:
-        print(line)
         firstHalf = set(line[:len(line)//2])
         secondHalf = set(line[(len(line)//2):])
         bothComp.append(*firstHalf.intersection(secondHalf))
-        print(firstHalf, secondHalf)
     score = 0
     for char in bothComp:
         if (char.islower()):
             score += ord(char)% 96
-            print(ord(char)% 96)
         else:
             score += ord(char)% 64 + 26
-            print(ord(char)% 64 + 26)
-    print(score)
+    print(f"Priority for first part: {score}")
 
 def solveSecond(data):
     bothComp = []
@@ -35,11 +31,9 @@ def solveSecond(data):
     for char in bothComp:
         if (char.islower()):
             score += ord(char)% 96
-            print(ord(char)% 96)
         else:
             score += ord(char)% 64 + 26
-            print(ord(char)% 64 + 26)
-    print(score)
+    print(f"Priority for second part: {score}")
 
 if __name__ == "__main__":
     data = getInput("./input")
