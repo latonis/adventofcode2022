@@ -9,7 +9,7 @@ local function split (inputstr, sep)
     return t
  end
 
-local function getInput(fileName)
+ local function getInput(fileName)
     local fileIn = io.open(fileName)
 
     -- check if file was read successfully
@@ -19,17 +19,33 @@ local function getInput(fileName)
     end
 
     local lines = fileIn:lines()
-    return lines
+    local count = 1
+    local returnLines = {}
+    
+    for line in lines do
+        returnLines[count] = line
+        count = count + 1
+    end
+
+    return returnLines
 end
 
-local function solveProblem(input)
+local function solveFirst(input)
     -- do things here to solve problem
-    for line in input do
+    for idx, line in pairs(input) do
+        print(line)
+    end
+    -- do things above here to solve the problem
+end
+
+local function solveSecond(input)
+    -- do things here to solve problem
+    for idx, line in pairs(input) do
         print(line)
     end
     -- do things above here to solve the problem
 end
 
 local input = getInput("./input")
-
-solveProblem(input)
+solveFirst(input)
+solveSecond(input)
