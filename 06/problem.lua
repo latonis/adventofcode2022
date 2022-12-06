@@ -36,7 +36,10 @@ end
 function Set(str)
     local s = {}
     for char in str:gmatch"." do s[char] = true end
-    return s
+    local count = 0
+    for _ in pairs(s) do count = count + 1 end
+
+    return s, count
 end
 
 function IsUpper(char)
@@ -45,16 +48,28 @@ end
 
 local function solveFirst(input)
     -- do things here to solve problem
-    for idx, line in pairs(input) do
-        print(line)
+    input = input[1]
+    for idx = 4, #input do
+        local _, n = Set(input:sub(idx-4, idx-1))
+        if (n == 4) then
+            -- indexes start at 1 in lua
+            print(idx-1)
+            return
+        end
     end
     -- do things above here to solve the problem
 end
 
 local function solveSecond(input)
     -- do things here to solve problem
-    for idx, line in pairs(input) do
-        print(line)
+    input = input[1]
+    for idx = 14, #input do
+        local _, n = Set(input:sub(idx-14, idx-1))
+        if (n == 14) then
+            -- indexes start at 1 in lua
+            print(idx-1)
+            return
+        end
     end
     -- do things above here to solve the problem
 end
