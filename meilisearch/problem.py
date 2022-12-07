@@ -111,8 +111,37 @@ def solveOne(data):
             shortest.append([stops, name, path])
     results.sort(key=lambda x: x[2])
     # print(results)
-    print(shortest)
+    print(shortest[0])
+
+def solveTwo(data):
+    nodes = NodeList()
+
+    for line in data:
+        [name, path] = line.split(" - ")
+        nodes.addNode(path, name)
+    
+    results = []
+    nodes.findPaths(nodes.root, 0, results)
+    shortest = []
+    shortestName = ""
+
+    for node in results:
+        path = node[0]
+        name = node[1]
+        stops = node[2]
+
+        if not shortest:
+            shortest = [[stops, name, path]]
+            continue
+        if (stops < shortest[0][0]):
+            shortest = [[stops, name, path]]
+            continue
+        if (stops == shortest[0][0]):
+            shortest.append([stops, name, path])
+    # results.sort(key=lambda x: x[2])
+    print(results)
+
 if __name__ == "__main__":
-    data = getInput("./input")
+    data = getInput("./test-input")
     solveOne(data)
     solveTwo(data)
