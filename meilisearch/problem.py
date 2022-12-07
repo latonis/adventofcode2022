@@ -64,15 +64,15 @@ class NodeList:
     #     return 0
 
     def findPaths(self, node, stopCount, allNodes):
-        if (node.word):
-            allNodes.append([node.path, " ".join(node.name), stopCount])
+        
 
         if (all(node.children)):
             stopCount +=1
 
         if node.children[0]:
             self.findPaths(node.children[0], stopCount, allNodes)
-
+        if (node.word):
+            allNodes.append([node.path, " ".join(node.name), stopCount])
         if node.children[1]:
             self.findPaths(node.children[1], stopCount, allNodes)
 
@@ -109,8 +109,7 @@ def solveOne(data):
             continue
         if (stops == shortest[0][0]):
             shortest.append([stops, name, path])
-    results.sort(key=lambda x: x[2])
-    # print(results)
+    
     print(shortest[0])
 
 def solveTwo(data):
@@ -138,7 +137,6 @@ def solveTwo(data):
             continue
         if (stops == shortest[0][0]):
             shortest.append([stops, name, path])
-    # results.sort(key=lambda x: x[2])
     print(results)
 
 if __name__ == "__main__":
