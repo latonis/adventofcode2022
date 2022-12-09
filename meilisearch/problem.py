@@ -7,9 +7,10 @@ class Node:
         self.path = ""
         self.name = []
         self.stop = False
-
+        self.parent = None
+        self.key = ""
     def __str__(self):
-        return f"{self.path}"
+        return f"{self.name}"
 
     def __iter__(self):
         "implement the iterator protocol"
@@ -23,7 +24,7 @@ class NodeList:
     prefixes = {}
     def __init__(self):
         self.root = Node()    
-    
+        self.root.path = "ROOT"
     def toIndex(self, char):
         if (char == "L"):
             return 0
@@ -38,16 +39,16 @@ class NodeList:
 
         for height in range(n):
             idx = self.toIndex(key[height])
-
             if not (runner.children[idx]):
                 runner.children[idx] = Node()
+            parent = runner
             runner = runner.children[idx]
+            runner.parent = parent
+            runner.key = key[height]
 
         runner.word = True
         runner.name.append(name)
         runner.path = key
-
-    
 
     def __str__(self):
         return str([str(x) for x in self.nodes])
@@ -64,18 +65,68 @@ class NodeList:
     #     return 0
 
     def findPaths(self, node, stopCount, allNodes):
-        
+        if (node.word):
+            allNodes.append((node, stopCount))
 
         if (all(node.children)):
             stopCount +=1
 
         if node.children[0]:
             self.findPaths(node.children[0], stopCount, allNodes)
-        if (node.word):
-            allNodes.append([node.path, " ".join(node.name), stopCount])
+        
         if node.children[1]:
             self.findPaths(node.children[1], stopCount, allNodes)
+    
+    def nextShortest(self, node, stopCount):
+        if (node is None):
+            return
+        print(node.path)
 
+        if any(node.children):
+            stopCount +=  1
+        
+        if (node.word):
+            return node
+        stopCountLeft = -1
+        stopCountRight = -1
+        elif node.children[0]:
+            print("LEFT")
+            if (node.children[1]):
+                print("BOTH SIBLINGS")
+                if (not node.children[0].word and node.children[1].word):
+                    return node.children[1]
+            return self.nextShortest(node.children[0], stopCount)
+        elif node.children[1]:
+            
+            print("RIGHT")
+            return self.nextShortest(node.children[1], stopCount)
+        else:
+            print("PARENT")
+            self.removeNode(node, id(node))
+            return self.nextShortest(node.parent, stopCount)
+
+    def removeNode(self, node, id_):
+        print()
+        
+        if (id_ == id(node)):
+            print("FOUND")
+            if (node.children[0] is not None and node.children[1] is not None):
+                node.word = False
+                return
+            if (node.parent is not None):
+                if (node.key == "L"):
+                    node.parent.children[0] = None
+                else:
+                    node.parent.children[1] = None
+            return
+        
+        if node.children[0]:
+            self.removeNode(node.children[0], id_)
+        if node.children[1]:
+            self.removeNode(node.children[1], id_)
+        
+        
+    
 def getInput(file):
     data = None
 
@@ -96,20 +147,19 @@ def solveOne(data):
     shortest = []
     shortestName = ""
 
-    for node in results:
-        path = node[0]
-        name = node[1]
-        stops = node[2]
+    for node, stopCount in results:
+        path = node.path
+        name = node.name
 
         if not shortest:
-            shortest = [[stops, name, path]]
+            shortest = [[stopCount, name, path]]
             continue
-        if (stops < shortest[0][0]):
-            shortest = [[stops, name, path]]
+        if (stopCount < shortest[0][0]):
+            shortest = [[stopCount, name, path]]
             continue
-        if (stops == shortest[0][0]):
-            shortest.append([stops, name, path])
-    
+        if (stopCount == shortest[0][0]):
+            shortest.append([stopCount, name, path])
+
     print(shortest[0])
 
 def solveTwo(data):
@@ -124,20 +174,26 @@ def solveTwo(data):
     shortest = []
     shortestName = ""
 
-    for node in results:
-        path = node[0]
-        name = node[1]
-        stops = node[2]
-
+    for node, stopCount in results:
         if not shortest:
-            shortest = [[stops, name, path]]
+            shortest = [[node, stopCount]]
             continue
-        if (stops < shortest[0][0]):
-            shortest = [[stops, name, path]]
+        if (stopCount < shortest[0][1]):
+            shortest = [[node, stopCount]]
             continue
-        if (stops == shortest[0][0]):
-            shortest.append([stops, name, path])
-    print(results)
+        if (stopCount == shortest[0][1]):
+            shortest.append([node, stopCount])
+
+    totalStopCount = 0
+    node = shortest[0][0]
+    
+    while (node is not None):
+        if (node.word):
+            print(node.name)
+            nodes.removeNode(nodes.root, id(node))
+        node = nodes.nextShortest(node.parent, totalStopCount)
+
+    print(totalStopCount)
 
 if __name__ == "__main__":
     data = getInput("./test-input")

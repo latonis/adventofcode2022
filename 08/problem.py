@@ -85,7 +85,7 @@ def solveFirst(data):
             row.append(tree)
         treeMap.append(row)
     
-    alwaysVisI = [0, len(treeMap[0])-1]
+    alwaysVisI = [0, len(treeMap)-1]
     alwaysVisJ = [0, len(treeMap[0])-1]
     for i in range(len(treeMap)):
         for j in range(len(treeMap[i])):

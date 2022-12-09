@@ -32,6 +32,16 @@ local function split (inputstr, sep)
     return returnLines
 end
 
+function PrintTable(table)
+
+    for idx, value in pairs(table) do
+        for idx2, value2 in pairs(value) do
+            io.write(value2, " ")
+        end
+        io.write("\n")
+    end
+
+end
 -- i have to write a set function??? lul
 function Set(str)
     local s = {}
@@ -45,9 +55,16 @@ end
 
 local function solveFirst(input)
     -- do things here to solve problem
+    local treeMap = {}
     for idx, line in pairs(input) do
-        print(line)
+        local row = {}
+        for char in line:gmatch"." do
+            table.insert(row, char)
+        end
+        table.insert(treeMap, row)
     end
+    
+    PrintTable(treeMap)
     -- do things above here to solve the problem
 end
 
@@ -59,6 +76,6 @@ local function solveSecond(input)
     -- do things above here to solve the problem
 end
 
-local input = getInput("./input")
+local input = getInput("./test-input")
 solveFirst(input)
-solveSecond(input)
+-- solveSecond(input)
