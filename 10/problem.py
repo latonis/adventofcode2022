@@ -13,8 +13,9 @@ def signalStrengthCalc(cycleCount, x_register, modValue):
     return 0
 
 def drawSprite(cycleCount, spritePos):
-    if cycleCount > 0:
-        if ((cycleCount % 40) in spritePos):
+    
+    if cycleCount >= 0:    
+        if (((cycleCount - 1) % 40) in spritePos):
             print("#", end='')
         else:
             print('.', end='')
@@ -51,16 +52,18 @@ def solveSecond(data):
         op = line.split()
         instr = op[0]
         if (instr == "noop"):
+            cycleCount += 1
+
             spritePosition = {x_register-1, x_register, x_register+1}
             drawSprite(cycleCount, spritePosition)  
-            cycleCount += 1
             # signalStrengthSum += signalStrengthCalc(cycleCount, x_register, modValue)
         elif (instr == "addx"):
             for i in range(cycles[instr]):
+                cycleCount += 1
+
                 spritePosition = {x_register-1, x_register, x_register+1}
                 drawSprite(cycleCount, spritePosition)
 
-                cycleCount += 1
                 # signalStrengthSum += signalStrengthCalc(cycleCount, x_register, modValue)
             x_register += int(op[1])
         else:
