@@ -14,9 +14,9 @@ class Monkey:
     testVal = None
     inspectionCount = 0
     worry = False
-    gcd = 1
-
-    def __init__(self, items, operator, toTrue, toFalse, a, b, testOp, testVal, worry):
+    worryVal = 0
+    lcm = 1
+    def __init__(self, items, operator, toTrue, toFalse, a, b, testOp, testVal, worry, worryVal=3):
         self.items = items
         self.operator = operator
         self.toTrue = toTrue
@@ -26,8 +26,7 @@ class Monkey:
         self.testOp = ops[testOp]
         self.testVal = testVal
         self.worry = worry
-        self.gcd = 1
-
+        self.worryVal = 3
     def applyOperator(self, a, b):
         return ops[self.operator](a, b)
 
@@ -42,7 +41,7 @@ class Monkey:
                 self.items[idx] = self.applyOperator(int(self.a), int(self.b))
             
             if (self.worry):
-                self.items[idx] = self.items[idx] // 3
+                self.items[idx] = self.items[idx] // self.worryVal
 
             self.inspectionCount += 1
             self.test(self.items[idx])
@@ -51,10 +50,15 @@ class Monkey:
 
     def test(self, item):
         if (self.testOp(item, self.testVal) == 0):
-            monkeys[self.toTrue].items.append(item)
+            if self.worry:
+                monkeys[self.toTrue].items.append(item)
+            else:
+                monkeys[self.toTrue].items.append(item % self.lcm)
         else:
-            monkeys[self.toFalse].items.append(item)
-
+            if self.worry:
+                monkeys[self.toFalse].items.append(item)
+            else:
+                monkeys[self.toFalse].items.append(item % self.lcm)
 
 
 def getInput(file):
@@ -103,12 +107,13 @@ def solveSecond(data):
             toFalse = int(data[i+5].split()[5])
             monkeys.append(Monkey(itemsArr, operator, toTrue, toFalse, a, b, testOp, testVal, False ))
     
-    rounds = [1, 20, 1000]
+    lcm = math.lcm(1, *[x.testVal for x in monkeys])
+
+    for monkey in monkeys:
+        monkey.lcm = lcm
 
     for i in range(10000):
         for idx, monkey in enumerate(monkeys):
-            if (i in rounds):
-                print(f"Monkey {idx} inspected {monkey.inspectionCount} items")
             monkey.turn()
 
     monkeys.sort(key=lambda s: s.inspectionCount, reverse=True)
@@ -118,6 +123,6 @@ def solveSecond(data):
     print(monkeyBusiness)
 
 if __name__ == "__main__":
-    data = getInput("./test-input")
+    data = getInput("./input")
     solveFirst(data)
     solveSecond(data)
