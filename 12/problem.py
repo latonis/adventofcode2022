@@ -33,7 +33,7 @@ def nextSteps(heatmap, currentPos) -> list:
 
     return path
 
-def myDjikstra(heatmap, currentPath, visited, goal):
+def myDijkstra(heatmap, currentPath, visited, goal):
     while (currentPath):
         for node, steps in currentPath:
             nextStepArr = nextSteps(heatmap, node)
@@ -68,7 +68,7 @@ def solveFirst(data):
             row.append(char)
         heatmap.append(row)
     
-    print(myDjikstra(heatmap, [(startPos, 0)], visited, endPos))
+    print(myDijkstra(heatmap, [(startPos, 0)], visited, endPos))
  
 
 def solveSecond(data):
@@ -89,7 +89,7 @@ def solveSecond(data):
 
     results = []
     for start in startPositions:
-        results.append(myDjikstra(heatmap, [(start, 0)], {start: True}, endPos))
+        results.append(myDijkstra(heatmap, [(start, 0)], {start: True}, endPos))
 
     print(min([x for x in results if x is not False]))
     
