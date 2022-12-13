@@ -33,7 +33,6 @@ class NodeList:
 
 
     def addNode(self, key, name):
-        
         runner = self.root
         n = len(key)
 
@@ -53,17 +52,6 @@ class NodeList:
     def __str__(self):
         return str([str(x) for x in self.nodes])
 
-    # def compareNodes(self, node1, node2):
-    #     # node 1 less than node 2
-    #     for char1, char2 in zip(node1.path, node2.path):
-    #         if (char1 == char2):
-    #             continue
-    #         elif (char1 == "L"):
-    #             return -1
-    #         else:
-    #             return 1
-    #     return 0
-
     def findPaths(self, node, stopCount, allNodes):
         if (node.word):
             allNodes.append((node, stopCount))
@@ -79,54 +67,53 @@ class NodeList:
     
     def nextShortest(self, node, stopCount):
         if (node is None):
-            return
-        print(node.path)
-
-        if any(node.children):
-            stopCount +=  1
+            return None, stopCount
+    
+        if all(node.children) or node.word:
+            stopCount +=  1 
+        elif (node.word and any(node.children)):
+            stopCount +=  1 
         
         if (node.word):
-            return node
-        stopCountLeft = -1
-        stopCountRight = -1
-        elif node.children[0]:
-            print("LEFT")
-            if (node.children[1]):
-                print("BOTH SIBLINGS")
-                if (not node.children[0].word and node.children[1].word):
-                    return node.children[1]
-            return self.nextShortest(node.children[0], stopCount)
-        elif node.children[1]:
+            return node, stopCount
+
+        if (node.children[0] is not None and node.children[1] is not None):
+            stopCountLeft = 0
+            stopCountRight = 0
+            [nodeL, stopCountRight] = self.nextShortest(node.children[0], stopCountLeft)
+            [nodeR, stopCountLeft] = self.nextShortest(node.children[1], stopCountRight)   
             
-            print("RIGHT")
+            if (stopCountLeft <= stopCountRight):
+                return nodeL, stopCountLeft
+            else:
+                return nodeR, stopCountRight
+        elif node.children[0] is not None:
+            return self.nextShortest(node.children[0], stopCount)
+        elif node.children[1] is not None:
             return self.nextShortest(node.children[1], stopCount)
         else:
-            print("PARENT")
-            self.removeNode(node, id(node))
+            node = self.removeNode(node, id(node))
             return self.nextShortest(node.parent, stopCount)
 
-    def removeNode(self, node, id_):
-        print()
-        
+    def removeNode(self, node, id_):        
         if (id_ == id(node)):
-            print("FOUND")
             if (node.children[0] is not None and node.children[1] is not None):
                 node.word = False
-                return
+                return node
             if (node.parent is not None):
                 if (node.key == "L"):
                     node.parent.children[0] = None
                 else:
                     node.parent.children[1] = None
-            return
+            return node
         
         if node.children[0]:
-            self.removeNode(node.children[0], id_)
+            if (self.removeNode(node.children[0], id_)):
+                return node
         if node.children[1]:
-            self.removeNode(node.children[1], id_)
-        
-        
-    
+            if (self.removeNode(node.children[1], id_)):
+                return node
+        return None
 def getInput(file):
     data = None
 
@@ -145,7 +132,6 @@ def solveOne(data):
     results = []
     nodes.findPaths(nodes.root, 0, results)
     shortest = []
-    shortestName = ""
 
     for node, stopCount in results:
         path = node.path
@@ -172,7 +158,6 @@ def solveTwo(data):
     results = []
     nodes.findPaths(nodes.root, 0, results)
     shortest = []
-    shortestName = ""
 
     for node, stopCount in results:
         if not shortest:
@@ -190,8 +175,10 @@ def solveTwo(data):
     while (node is not None):
         if (node.word):
             print(node.name)
-            nodes.removeNode(nodes.root, id(node))
-        node = nodes.nextShortest(node.parent, totalStopCount)
+            node = nodes.removeNode(nodes.root, id(node))
+        [node, nextStop] = nodes.nextShortest(node, 0)
+        print(nextStop)
+        totalStopCount += nextStop
 
     print(totalStopCount)
 
