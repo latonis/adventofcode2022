@@ -7,9 +7,9 @@ local function split (inputstr, sep)
        table.insert(t, str)
     end
     return t
- end
+end
 
- local function getInput(fileName)
+local function getInput(fileName)
     local fileIn = io.open(fileName)
 
     -- check if file was read successfully
@@ -53,6 +53,12 @@ function IsUpper(char)
     return string.match(char, '%u')
 end
 
+local function isVisible(row, col, treeMap)
+
+    print("")
+
+end
+
 local function solveFirst(input)
     -- do things here to solve problem
     local treeMap = {}
@@ -65,6 +71,19 @@ local function solveFirst(input)
     end
     
     PrintTable(treeMap)
+    local visibleScore = 0
+    for idx, value in pairs(treeMap) do
+        for idx2, value2 in pairs(treeMap[1]) do
+            if (idx == 0 or idx2 == 0 or idx == #treeMap or idx2 == #treeMap[1]) then
+                visibleScore = visibleScore + 1
+            else 
+                
+            end
+        end
+    end
+
+    print(visibleScore)
+    return visibleScore
     -- do things above here to solve the problem
 end
 
