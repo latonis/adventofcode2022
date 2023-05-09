@@ -45,8 +45,13 @@ end
 
 local function solveFirst(input)
     -- do things here to solve problem
+    local stacks = {{"T", "R", "D", "H", "Q", "N", "P", "B"}, {"V", "T", "J", "B", "G", "W"}, {"Q", "M", "V", "S", "D", "H", "R", "N"}, {"C", "M", "N", "Z", "P"}, {"B", "Z", "D"}, {"Z", "W", "C", "V"}, {"S", "L", "Q", "V", "C", "N", "Z", "G"}, {"V", "N", "D", "M", "J", "G", "L"}, {"G", "C", "Z", "F", "M", "P", "T"}}
+    print(stacks)
     for idx, line in pairs(input) do
-        print(line)
+        if idx > 10 then
+            local _, _, times, to, from = string.find(line, "[^0-9.]*(%d*)[^0-9.]*(%d*)[^0-9.]*(%d*)")
+            print(times, to, from)
+        end
     end
     -- do things above here to solve the problem
 end
@@ -61,4 +66,4 @@ end
 
 local input = getInput("./input")
 solveFirst(input)
-solveSecond(input)
+-- solveSecond(input)
